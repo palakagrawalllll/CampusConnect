@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container" style="max-width:640px;margin-top:3rem;">
+  <a href="{{ url_for('student_dashboard') }}" class="btn btn-outline btn-sm" style="margin-bottom:1.5rem;border-radius:20px;padding:0.4rem 1rem;">
+    <span style="margin-right:0.4rem;">←</span> Back to Dashboard
+  </a>
+
+  <div class="card" style="padding:2.5rem;border-top:4px solid var(--primary);">
+    <h2 style="font-size:1.6rem;margin-bottom:1.5rem;">Request a Visit</h2>
+
+    <div style="background:var(--bg-color);border:1px solid var(--border);border-left:4px solid var(--primary);border-radius:8px;padding:1.25rem;margin-bottom:2rem;display:flex;align-items:center;gap:1rem;">
+      <div style="width:48px;height:48px;border-radius:50%;background:white;color:var(--primary);font-weight:bold;display:flex;align-items:center;justify-content:center;font-size:1.4rem;box-shadow:var(--shadow-sm);">F</div>
+      <div style="flex:1;">
+        <div style="font-weight:800;font-size:1.1rem;color:var(--text-main);">{{ faculty.name }}</div>
+        <div style="color:var(--text-muted);font-size:0.9rem;font-weight:500;">{{ faculty.department }}</div>
+        <div style="font-size:0.85rem;margin-top:0.4rem;color:#475569;display:flex;align-items:center;gap:0.5rem;">
+          <span style="font-weight:600;">{{ faculty.building }}</span> · Floor {{ faculty.floor }}, Room {{ faculty.room }}
+        </div>
+      </div>
+      <div>
+        <span class="badge badge-{{ faculty.availability }}" style="padding:6px 14px;box-shadow:none;">
+          {% if faculty.availability == 'available' %}Available
+          {% elif faculty.availability == 'busy' %}Busy
+          {% else %}In Class
+          {% endif %}
+        </span>
+      </div>
+    </div>
+
+    {% if faculty.availability != 'available' %}
+    <div class="alert alert-warning" style="margin-bottom:2rem;font-size:0.9rem;">
+      <strong style="display:block;margin-bottom:0.25rem;">Note on Availability:</strong> 
+      This faculty member is currently marked as {{ faculty.availability }}. You can still send a request, and they will review it when they are free.
+    </div>
+    {% endif %}
+
+    <form method="POST">
+      <div class="form-group">
+        <label>Reason for Visit <span style="color:var(--danger);">*</span></label>
+        <textarea name="reason" placeholder="Briefly describe the purpose of your visit (e.g., Question about Assignment 3)..." required style="min-height:120px;"></textarea>
+      </div>
+      
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;background:#f8fafc;padding:1.25rem;border-radius:12px;border:1px solid var(--border);margin-bottom:1.5rem;">
+        <div style="grid-column: span 2;">
+          <strong style="font-size:0.95rem;color:var(--text-main);">Meeting Preference (Optional)</strong>
+          <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:1rem;margin-top:0.25rem;">Suggest a date and time that works well for you.</p>
+        </div>
+        <div class="form-group" style="margin-bottom:0;">
+          <label>Preferred Date</label>
+          <input type="date" name="preferred_date">
+        </div>
+        <div class="form-group" style="margin-bottom:0;">
+          <label>Preferred Time</label>
+          <input type="time" name="preferred_time">
+        </div>
+      </div>
+      
+      <button type="submit" class="btn btn-primary" style="width:100%;padding:0.85rem;font-size:1.05rem;">
+        Send Visit Request
+      </button>
+    </form>
+  </div>
+</div>
+{% endblock %}

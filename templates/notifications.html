@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container" style="max-width:720px;margin-top:2.5rem;">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
+    <h1 style="margin:0;">Notifications</h1>
+    <a href="{{ url_for('student_dashboard' if session.role == 'student' else 'faculty_dashboard') }}" class="btn btn-outline btn-sm" style="border-radius:20px;">
+      Close
+    </a>
+  </div>
+
+  <div class="card" style="padding:0;overflow:hidden;border:1px solid var(--border);">
+    {% if notifs %}
+      <div style="display:flex;flex-direction:column;">
+      {% for n in notifs %}
+      <div class="notif-item" style="padding:1.5rem;{% if not n.is_read %}background:rgba(79, 70, 229, 0.03);border-left:4px solid var(--primary);{% else %}border-left:4px solid transparent;{% endif %}">
+        <div class="notif-dot {% if n.is_read %}read{% endif %}" style="margin-top:8px;"></div>
+        <div style="flex:1;">
+          <div style="font-size:1rem;font-weight:{% if n.is_read %}500{% else %}700{% endif %};color:var(--text-main);line-height:1.5;">{{ n.message }}</div>
+          <div class="notif-meta" style="margin-top:0.5rem;display:flex;align-items:center;gap:0.4rem;">
+            <span>{{ n.created_at.strftime('%b %d, %Y at %H:%M') }}</span>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+      </div>
+    {% else %}
+    <div class="empty" style="margin:0;border:none;background:white;">
+      <div class="empty-icon" style="height:3.5rem;"></div>
+      <div style="font-size:1.2rem;font-weight:700;color:var(--text-main);">All Caught Up!</div>
+      <div style="font-size:0.95rem;margin-top:0.5rem;color:var(--text-muted);">You have no new notifications right now.</div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
